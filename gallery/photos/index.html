@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cino. — Photos</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<main class="wrap">
+
+<header class="top">
+
+    <div>
+        <h1 class="page-title">Photos</h1>
+        <p class="sub">Your photo gallery.</p>
+    </div>
+
+    <div class="actions">
+        <a class="back" href="/home/">Home</a>
+
+        <button class="btn" onclick="document.getElementById('files').click()">
+            + Upload
+        </button>
+
+        <input id="files" type="file" accept="image/*" multiple>
+
+    </div>
+
+</header>
+
+<section id="gallery" class="grid"></section>
+
+</main>
+
+<div id="viewer" class="viewer">
+    <button class="close" onclick="closeViewer()">×</button>
+    <img id="viewerImage">
+</div>
+
+<script>
+
+const gallery = document.getElementById("gallery");
+const files = document.getElementById("files");
+
+let photos = JSON.parse(localStorage.getItem("cinoPhotos") || "[]");
+
+function render() {
+
+    gallery.innerHTML = "";
+
+    if (photos.length === 0) {
+        gallery.innerHTML =
+            '<div class="empty">Nothing here yet. Use + Upload to add photos.</div>';
+        return;
+    }
+
+    photos.forEach((photo, index) => {
+
+        const item = document.createElement("article");
+        item.className = "item";
+
+        const img = document.createElement("img");
+        img.src = photo;
+
+        img.onclick = () => {
+            document.getElementById("viewerImage").src = photo;
+            document.getElementById("viewer").classList.add("open");
+        };
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete";
+        deleteButton.textContent = "×";
+
+        deleteButton.onclick = (event) => {
+            event.stopPropagation();
+
+            photos.splice(index, 1);
+            localStorage.setItem("cinoPhotos", JSON.stringify(photos));
+
+            render();
+        };
+
+        item.appendChild(img);
+        item.appendChild(deleteButton);
+        gallery.appendChild(item);
+
+    });
+}
+
+files.onchange = () => {
+
+    [...files.files].forEach(file => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+
+            photos.push(reader.result);
+
+            localStorage.setItem(
+                "cinoPhotos",
+                JSON.stringify(photos)
+            );
+
+            render();
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+};
+
+function closeViewer() {
+    document.getElementById("viewer").classList.remove("open");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
