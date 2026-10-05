@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cino. — Videos</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<main class="wrap">
+
+<header class="top">
+
+    <div>
+        <h1 class="page-title">Videos</h1>
+        <p class="sub">Your video gallery.</p>
+    </div>
+
+    <div class="actions">
+
+        <a class="back" href="/home/">Home</a>
+
+        <button class="btn" onclick="document.getElementById('files').click()">
+            + Upload
+        </button>
+
+        <input id="files" type="file" accept="video/*" multiple>
+
+    </div>
+
+</header>
+
+<section id="gallery" class="grid"></section>
+
+</main>
+
+<div id="viewer" class="viewer">
+    <button class="close" onclick="closeViewer()">×</button>
+    <div id="viewerContent"></div>
+</div>
+
+<script>
+
+const gallery = document.getElementById("gallery");
+const files = document.getElementById("files");
+
+let videos = JSON.parse(localStorage.getItem("cinoVideos") || "[]");
+
+function render() {
+
+    gallery.innerHTML = "";
+
+    if (videos.length === 0) {
+        gallery.innerHTML =
+            '<div class="empty">Nothing here yet. Use + Upload to add videos.</div>';
+        return;
+    }
+
+    videos.forEach((video, index) => {
+
+        const item = document.createElement("article");
+        item.className = "item";
+
+        const player = document.createElement("video");
+
+        player.src = video;
+        player.muted = true;
+        player.playsInline = true;
+        player.preload = "metadata";
+
+        player.onclick = () => {
+
+            const viewer = document.getElementById("viewer");
+            const content = document.getElementById("viewerContent");
+
+            content.innerHTML = "";
+
+            const bigVideo = document.createElement("video");
+
+            bigVideo.src = video;
+            bigVideo.controls = true;
+            bigVideo.autoplay = true;
+            bigVideo.playsInline = true;
+
+            content.appendChild(bigVideo);
+
+            viewer.classList.add("open");
+        };
+
+        const deleteButton = document.createElement("button");
+
+        deleteButton.className = "delete";
+        deleteButton.textContent = "×";
+
+        deleteButton.onclick = (event) => {
+
+            event.stopPropagation();
+
+            videos.splice(index, 1);
+
+            localStorage.setItem(
+                "cinoVideos",
+                JSON.stringify(videos)
+            );
+
+            render();
+
+        };
+
+        item.appendChild(player);
+        item.appendChild(deleteButton);
+
+        gallery.appendChild(item);
+
+    });
+}
+
+files.onchange = () => {
+
+    [...files.files].forEach(file => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => {
+
+            videos.push(reader.result);
+
+            localStorage.setItem(
+                "cinoVideos",
+                JSON.stringify(videos)
+            );
+
+            render();
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+};
+
+function closeViewer() {
+    document.getElementById("viewer").classList.remove("open");
+    document.getElementById("viewerContent").innerHTML = "";
+}
+
+render();
+
+</script>
+
+</body>
+</html>
