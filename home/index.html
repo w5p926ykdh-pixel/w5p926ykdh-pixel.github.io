@@ -1,82 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Cino. — Home</title>
+<title>Cino. — Home</title>
 
-    <link rel="stylesheet" href="../style.css">
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #171922 0%,
+            #08090c 50%
+        );
+
+    color: #f5f7fb;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+
+/* HEADER */
+
+.hero {
+    text-align: center;
+
+    padding-top: 105px;
+}
+
+.brand {
+    font-size: 28px;
+    font-weight: 800;
+
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    margin: 0;
+
+    font-size: 76px;
+    line-height: 1;
+
+    letter-spacing: -5px;
+}
+
+.hero p {
+    margin-top: 28px;
+
+    color: #8d94a3;
+
+    font-size: 18px;
+}
+
+
+/* BUTTON CONTAINER */
+
+.choices {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 30px;
+
+    margin-top: 48px;
+}
+
+
+/* BUTTONS */
+
+.choice {
+    width: 280px;
+    height: 195px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 22px;
+
+    background: #111318;
+
+    border: 1px solid #292c35;
+
+    border-radius: 24px;
+
+    color: #f5f7fb;
+
+    text-decoration: none;
+
+    font-size: 21px;
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.choice:hover {
+    transform: translateY(-5px);
+
+    background: #171922;
+
+    border-color: #3a3e4a;
+}
+
+.icon {
+    font-size: 42px;
+
+    line-height: 1;
+}
+
+.choice-name {
+    font-size: 21px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .choices {
+        flex-direction: column;
+
+        padding: 0 20px;
+    }
+
+    .choice {
+        width: 100%;
+        max-width: 400px;
+    }
+
+}
+
+</style>
 </head>
+
 
 <body>
 
-<div class="wrap">
+<div class="hero">
 
-    <main class="hero">
-
-        <div class="brand">
-            Cino.
-        </div>
-
-        <h1>
-            Welcome.
-        </h1>
-
-        <p>
-            Your personal gallery.
-        </p>
-
-    </main>
-
-
-    <div class="choices">
-
-        <!-- INFO & LINKS -->
-
-        <a class="choice" href="../gallery/info-copyandpaste/">
-
-            <span class="icon">
-                🔗
-            </span>
-
-            <span>
-                Info & Links
-            </span>
-
-        </a>
-
-
-        <!-- PHOTOS -->
-
-        <a class="choice" href="../gallery/photos/">
-
-            <span class="icon">
-                ▧
-            </span>
-
-            <span>
-                Photos
-            </span>
-
-        </a>
-
-
-        <!-- VIDEOS -->
-
-        <a class="choice" href="../gallery/videos/">
-
-            <span class="icon">
-                ▶
-            </span>
-
-            <span>
-                Videos
-            </span>
-
-        </a>
-
+    <div class="brand">
+        Cino.
     </div>
+
+    <h1>
+        Welcome.
+    </h1>
+
+    <p>
+        Your personal gallery.
+    </p>
+
+</div>
+
+
+<div class="choices">
+
+    <a
+        class="choice"
+        href="../gallery/info-copyandpaste/"
+    >
+
+        <span class="icon">🔗</span>
+
+        <span class="choice-name">
+            Info &amp; Links
+        </span>
+
+    </a>
+
+
+    <a
+        class="choice"
+        href="../gallery/photos/"
+    >
+
+        <span class="icon">▧</span>
+
+        <span class="choice-name">
+            Photos
+        </span>
+
+    </a>
+
+
+    <a
+        class="choice"
+        href="../gallery/videos/"
+    >
+
+        <span class="icon">▶</span>
+
+        <span class="choice-name">
+            Videos
+        </span>
+
+    </a>
 
 </div>
 
