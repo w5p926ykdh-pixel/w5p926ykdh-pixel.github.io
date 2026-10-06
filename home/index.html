@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-    
-    Cino. — Home</title>
+<title>Cino. — Home</title>
 
 <style>
 
@@ -14,15 +13,15 @@
     box-sizing: border-box;
 }
 
-html {
+html,
+body {
+    margin: 0;
+    min-height: 100%;
     background: #08090c;
 }
 
 body {
-    margin: 0;
     min-height: 100vh;
-
-    background: #08090c;
 
     color: #f5f7fb;
 
@@ -32,73 +31,89 @@ body {
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
+
+    display: flex;
+    flex-direction: column;
 
     overflow-x: hidden;
 }
 
-    color: #f5f7fb;
 
-    font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+/* =========================
+   MAIN
+========================= */
+
+main {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    padding-top: 155px;
 }
 
 
-/* HEADER */
+/* =========================
+   HERO
+========================= */
 
 .hero {
     text-align: center;
-    width: 100%;
-    transform: translateY(30px);
 }
 
 .brand {
     font-size: 28px;
     font-weight: 400;
-    margin-bottom: -5px;
-    text-align: center;
+
+    line-height: 1;
+
+    margin-bottom: 10px;
 }
 
 .hero h1 {
     margin: 0;
-    font-size: 76px;
-    line-height: 1;
+
+    font-size: clamp(60px, 7vw, 82px);
+
+    line-height: 0.95;
+
     letter-spacing: -5px;
-    text-align: center;
+
+    font-weight: 800;
 }
 
 .hero p {
-    margin-top: 28px;
+    margin: 32px 0 0;
+
     color: #8d94a3;
+
     font-size: 18px;
-    text-align: center;
 }
 
 
-/* BUTTON CONTAINER */
+/* =========================
+   CHOICES
+========================= */
 
 .choices {
-    width: 100%;
-
     display: flex;
 
     justify-content: center;
-    align-items: center;
 
-    gap: 30px;
+    gap: 32px;
 
-    margin-top: 48px;
+    width: 100%;
+
+    margin-top: 58px;
+
+    padding: 0 30px;
 }
 
-
-/* BUTTONS */
-
 .choice {
-    width: 280px;
-    height: 195px;
+    width: 300px;
+    height: 210px;
 
     display: flex;
 
@@ -107,20 +122,17 @@ body {
     align-items: center;
     justify-content: center;
 
-    gap: 22px;
+    gap: 25px;
 
     background: #111318;
 
     border: 1px solid #292c35;
 
-    border-radius: 24px;
+    border-radius: 25px;
 
     color: #f5f7fb;
 
     text-decoration: none;
-
-    font-size: 21px;
-    font-weight: 700;
 
     transition:
         transform 0.2s ease,
@@ -136,32 +148,186 @@ body {
     border-color: #3a3e4a;
 }
 
+
+/* =========================
+   ICONS
+========================= */
+
 .icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 48px;
+
     font-size: 42px;
 
     line-height: 1;
 }
 
 .choice-name {
-    font-size: 21px;
+    font-size: 22px;
+
+    font-weight: 700;
 }
 
 
-/* MOBILE */
+/* =========================
+   FOOTER
+========================= */
 
-@media (max-width: 900px) {
+footer {
+    width: 100%;
+
+    height: 82px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+
+    background: #000;
+
+    margin-top: 70px;
+}
+
+.email {
+    color: #252525;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    user-select: none;
+}
+
+.cino-logo {
+    color: #075a9d;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    letter-spacing: 8px;
+
+    transform: rotate(-2deg);
+
+    user-select: none;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 950px) {
+
+    main {
+        padding-top: 100px;
+    }
 
     .choices {
         flex-direction: column;
 
-        padding: 0 20px;
+        align-items: center;
+
+        gap: 18px;
     }
 
     .choice {
-        width: 100%;
-        max-width: 400px;
+        width: min(500px, 100%);
+        height: 150px;
     }
 
+    footer {
+        height: 70px;
+
+        padding: 0 18px;
+    }
+
+    .email {
+        font-size: 17px;
+    }
+
+    .cino-logo {
+        font-size: 28px;
+
+        letter-spacing: 5px;
+    }
+}
+
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 500px) {
+
+    main {
+        padding-top: 75px;
+    }
+
+    .hero h1 {
+        font-size: 58px;
+
+        letter-spacing: -4px;
+    }
+
+    .brand {
+        font-size: 24px;
+    }
+
+    .hero p {
+        margin-top: 24px;
+
+        font-size: 16px;
+    }
+
+    .choices {
+        margin-top: 45px;
+
+        padding: 0 18px;
+    }
+
+    .choice {
+        height: 130px;
+
+        border-radius: 20px;
+
+        gap: 15px;
+    }
+
+    .icon {
+        font-size: 36px;
+    }
+
+    .choice-name {
+        font-size: 19px;
+    }
+
+    footer {
+        margin-top: 50px;
+    }
+
+    .email {
+        font-size: 14px;
+    }
+
+    .cino-logo {
+        font-size: 23px;
+
+        letter-spacing: 3px;
+    }
 }
 
 </style>
@@ -170,67 +336,78 @@ body {
 
 <body>
 
-<div class="hero">
+<main>
 
-    <div class="brand">
-        Cino.
+    <section class="hero">
+
+        <div class="brand">
+            Cino.
+        </div>
+
+        <h1>
+            Welcome.
+        </h1>
+
+        <p>
+            Your personal gallery.
+        </p>
+
+    </section>
+
+
+    <section class="choices">
+
+        <a
+            class="choice"
+            href="../gallery/info-copyandpaste/"
+        >
+            <span class="icon">🔗</span>
+
+            <span class="choice-name">
+                Info &amp; Links
+            </span>
+        </a>
+
+
+        <a
+            class="choice"
+            href="../gallery/photos/"
+        >
+            <span class="icon">▧</span>
+
+            <span class="choice-name">
+                Photos
+            </span>
+        </a>
+
+
+        <a
+            class="choice"
+            href="../gallery/videos/"
+        >
+            <span class="icon">▶</span>
+
+            <span class="choice-name">
+                Videos
+            </span>
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="email">
+        the@cino.pntr.dev
     </div>
 
-    <h1>
-        Welcome.
-    </h1>
+    <div class="cino-logo">
+        CINO
+    </div>
 
-    <p>
-        Your personal gallery.
-    </p>
-
-</div>
-
-
-<div class="choices">
-
-    <a
-        class="choice"
-        href="../gallery/info-copyandpaste/"
-    >
-
-        <span class="icon">🔗</span>
-
-        <span class="choice-name">
-            Info &amp; Links
-        </span>
-
-    </a>
-
-
-    <a
-        class="choice"
-        href="../gallery/photos/"
-    >
-
-        <span class="icon">▧</span>
-
-        <span class="choice-name">
-            Photos
-        </span>
-
-    </a>
-
-
-    <a
-        class="choice"
-        href="../gallery/videos/"
-    >
-
-        <span class="icon">▶</span>
-
-        <span class="choice-name">
-            Videos
-        </span>
-
-    </a>
-
-</div>
+</footer>
 
 </body>
 </html>
