@@ -16,6 +16,7 @@
 html,
 body {
     margin: 0;
+    width: 100%;
     min-height: 100%;
     background: #08090c;
 }
@@ -52,6 +53,12 @@ main {
     align-items: center;
 
     padding-top: 155px;
+
+    /*
+       Leave room for the fixed footer
+       so the content does not overlap it.
+    */
+    padding-bottom: 110px;
 }
 
 
@@ -174,12 +181,16 @@ main {
 
 
 /* =========================
-   FOOTER
+   FIXED FOOTER
 ========================= */
 
 footer {
-    width: 100%;
+    position: fixed;
 
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
     height: 82px;
 
     display: flex;
@@ -191,7 +202,7 @@ footer {
 
     background: #000;
 
-    margin-top: 70px;
+    z-index: 100;
 }
 
 .email {
@@ -227,13 +238,14 @@ footer {
 
 
 /* =========================
-   MOBILE
+   TABLET / MOBILE
 ========================= */
 
 @media (max-width: 950px) {
 
     main {
         padding-top: 100px;
+        padding-bottom: 100px;
     }
 
     .choices {
@@ -275,6 +287,7 @@ footer {
 
     main {
         padding-top: 75px;
+        padding-bottom: 90px;
     }
 
     .hero h1 {
@@ -316,7 +329,9 @@ footer {
     }
 
     footer {
-        margin-top: 50px;
+        height: 65px;
+
+        padding: 0 14px;
     }
 
     .email {
@@ -408,6 +423,7 @@ footer {
     </div>
 
 </footer>
+
 
 </body>
 </html>
