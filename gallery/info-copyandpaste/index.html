@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info — Cino.</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="top">
+        <div>
+            <div class="brand">Cino.</div>
+            <h1 class="page-title">Info & Links</h1>
+            <p class="sub">Copy and paste these links.</p>
+        </div>
+
+        <a class="back" href="../../home/">Back</a>
+    </div>
+
+    <div id="links"></div>
+
+</div>
+
+<script>
+const links = [
+    {
+        name: "My Website",
+        url: "https://cino.pntr.dev/"
+    },
+
+    {
+        name: "GitHub",
+        url: "https://github.com/w5p926ykdh-pixel"
+    },
+
+    {
+        name: "YouTube",
+        url: "https://youtube.com/"
+    },
+
+    {
+        name: "Discord",
+        url: "https://discord.com/"
+    }
+
+    // Add more links like this:
+    // {
+    //     name: "Example",
+    //     url: "https://example.com/"
+    // }
+];
+
+const container = document.getElementById("links");
+
+links.forEach(link => {
+
+    const card = document.createElement("div");
+
+    card.style.cssText = `
+        background: #111318;
+        border: 1px solid #242731;
+        border-radius: 18px;
+        padding: 20px;
+        margin-bottom: 14px;
+    `;
+
+    card.innerHTML = `
+        <div style="
+            font-size:18px;
+            font-weight:700;
+            margin-bottom:8px;
+        ">
+            ${link.name}
+        </div>
+
+        <div style="
+            display:flex;
+            gap:10px;
+            align-items:center;
+        ">
+            <input
+                value="${link.url}"
+                readonly
+                style="
+                    display:block;
+                    flex:1;
+                    min-width:0;
+                    padding:12px;
+                    border-radius:10px;
+                    border:1px solid #292c35;
+                    background:#08090c;
+                    color:#f5f7fb;
+                    font:inherit;
+                "
+            >
+
+            <button
+                class="btn"
+                onclick="copyLink('${link.url}', this)"
+            >
+                Copy
+            </button>
+        </div>
+    `;
+
+    container.appendChild(card);
+});
+
+async function copyLink(url, button) {
+
+    await navigator.clipboard.writeText(url);
+
+    const oldText = button.textContent;
+
+    button.textContent = "Copied!";
+
+    setTimeout(() => {
+        button.textContent = oldText;
+    }, 1200);
+}
+</script>
+
+</body>
+</html>
