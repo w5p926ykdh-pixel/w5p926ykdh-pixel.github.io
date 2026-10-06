@@ -129,3 +129,26 @@ body {
 .btn:hover,
 .back:hover {
     background: #1
+
+/* MEDIA SIZE FIX */
+
+.grid .item {
+    position: relative;
+    overflow: hidden;
+}
+
+.grid .item img,
+.grid .item video {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.grid .item video {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
