@@ -53,11 +53,6 @@ main {
     align-items: center;
 
     padding-top: 155px;
-
-    /*
-       Leave room for the fixed footer
-       so the content does not overlap it.
-    */
     padding-bottom: 110px;
 }
 
@@ -218,22 +213,20 @@ footer {
     user-select: none;
 }
 
+
+/* =========================
+   LOGO IMAGE
+========================= */
+
 .cino-logo {
-    color: #075a9d;
+    width: 150px;
+    height: auto;
 
-    font-family:
-        "Courier New",
-        monospace;
-
-    font-size: 42px;
-
-    font-weight: 900;
-
-    letter-spacing: 8px;
-
-    transform: rotate(-2deg);
+    object-fit: contain;
 
     user-select: none;
+
+    display: block;
 }
 
 
@@ -272,9 +265,7 @@ footer {
     }
 
     .cino-logo {
-        font-size: 28px;
-
-        letter-spacing: 5px;
+        width: 120px;
     }
 }
 
@@ -339,9 +330,7 @@ footer {
     }
 
     .cino-logo {
-        font-size: 23px;
-
-        letter-spacing: 3px;
+        width: 100px;
     }
 }
 
@@ -418,9 +407,11 @@ footer {
         the@cino.pntr.dev
     </div>
 
-    <div class="cino-logo">
-        CINO
-    </div>
+    <img
+        class="cino-logo"
+        src="../Assets/cino-logo.png"
+        alt="Cino"
+    >
 
 </footer>
 
