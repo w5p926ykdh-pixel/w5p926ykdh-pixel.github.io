@@ -1,223 +1,164 @@
-:root {
-    color-scheme: dark;
-    --bg: #08090c;
-    --card: #111318;
-    --text: #f5f7fb;
-    --muted: #8d94a3;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info — Cino.</title>
+    <link rel="stylesheet" href="../../style.css">
 
-* {
-    box-sizing: border-box;
-}
+    <style>
+        #links {
+            max-width: 700px;
+            margin: 0 auto;
+        }
 
-body {
-    margin: 0;
-    padding: 32px;
-    min-height: 100vh;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: radial-gradient(circle at top, #171922, #08090c 45%);
-    color: var(--text);
-}
+        .link-card {
+            background: #111318;
+            border: 1px solid #242731;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
 
-.wrap {
-    max-width: 1100px;
-    margin: auto;
-}
+        .link-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
 
-.top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 48px;
-}
+        .link-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
 
-.hero {
-    min-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
+        .link-url {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #292c35;
+            background: #08090c;
+            color: #f5f7fb;
+            font: inherit;
+            text-align: center;
+        }
 
-.brand {
-    font-size: 28px;
-    font-weight: 800;
-}
+        @media (max-width: 600px) {
+            .link-row {
+                flex-direction: column;
+            }
 
-.hero h1 {
-    font-size: clamp(50px, 9vw, 90px);
-    margin: 15px 0;
-    letter-spacing: -5px;
-}
+            .link-url {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
 
-.hero p,
-.sub {
-    color: var(--muted);
-}
+<body>
 
-.choices {
-    display: grid;
-    grid-template-columns: repeat(2, 260px);
-    gap: 18px;
-    margin-top: 30px;
-}
+<div class="wrap">
 
-.choice {
-    min-height: 180px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid #292c35;
-    border-radius: 24px;
-    background: #111318;
-    color: white;
-    text-decoration: none;
-    transition: .25s;
-}
+    <div class="top">
+        <div>
+            <div class="brand">Cino.</div>
+            <h1 class="page-title">Info & Links</h1>
+            <p class="sub">Copy and paste these links.</p>
+        </div>
 
-.choice:hover {
-    transform: translateY(-6px);
-    background: #1a1d25;
-    border-color: #555b6b;
-}
+        <a class="back" href="../../home/">Back</a>
+    </div>
 
-.icon {
-    font-size: 42px;
-}
+    <div id="links"></div>
 
-.choice span:last-child {
-    font-size: 20px;
-    font-weight: 700;
-}
+</div>
 
-.page-title {
-    font-size: 42px;
-    margin: 0;
-}
+<script>
 
-.actions {
-    display: flex;
-    gap: 10px;
-}
+const links = [
 
-.btn,
-.back {
-    padding: 11px 15px;
-    border-radius: 12px;
-    border: 1px solid #2a2d36;
-    background: #15171d;
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-}
+    {
+        name: "My Website",
+        url: "https://cino.pntr.dev/"
+    },
 
-.btn:hover,
-.back:hover {
-    background: #20232b;
-}
+    {
+        name: "GitHub",
+        url: "https://github.com/w5p926ykdh-pixel"
+    },
 
-input {
-    display: none;
-}
+    {
+        name: "YouTube",
+        url: "https://youtube.com/"
+    },
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-}
-
-.item {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 1;
-    border-radius: 18px;
-    border: 1px solid #242731;
-    background: #111318;
-}
-
-.item img,
-.item video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-}
-
-.delete {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 34px;
-    height: 34px;
-    border: 0;
-    border-radius: 10px;
-    background: #000b;
-    color: white;
-    cursor: pointer;
-}
-
-.empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 70px;
-    color: var(--muted);
-    border: 1px dashed #292c35;
-    border-radius: 20px;
-}
-
-.viewer {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: #000d;
-    z-index: 10;
-}
-
-.viewer.open {
-    display: flex;
-}
-
-.viewer img,
-.viewer video {
-    max-width: 95vw;
-    max-height: 90vh;
-}
-
-.close {
-    position: fixed;
-    right: 20px;
-    top: 20px;
-    width: 42px;
-    height: 42px;
-    border: 0;
-    border-radius: 12px;
-    background: white;
-    color: black;
-    font-size: 22px;
-}
-
-@media (max-width: 650px) {
-    body {
-        padding: 20px;
+    {
+        name: "Discord",
+        url: "https://discord.com/"
     }
 
-    .choices {
-        grid-template-columns: 1fr;
-        width: 100%;
-    }
+    // Add more links here:
+    //
+    // {
+    //     name: "Example",
+    //     url: "https://example.com/"
+    // }
 
-    .choice {
-        width: 100%;
-    }
+];
 
-    .top {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+const container = document.getElementById("links");
+
+links.forEach(link => {
+
+    const card = document.createElement("div");
+
+    card.className = "link-card";
+
+    card.innerHTML = `
+        <div class="link-name">
+            ${link.name}
+        </div>
+
+        <div class="link-row">
+
+            <input
+                class="link-url"
+                value="${link.url}"
+                readonly
+            >
+
+            <button
+                class="btn"
+                onclick="copyLink('${link.url}', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+    `;
+
+    container.appendChild(card);
+
+});
+
+async function copyLink(url, button) {
+
+    await navigator.clipboard.writeText(url);
+
+    const oldText = button.textContent;
+
+    button.textContent = "Copied!";
+
+    setTimeout(() => {
+        button.textContent = oldText;
+    }, 1200);
+
 }
+
+</script>
+
+</body>
+</html>
