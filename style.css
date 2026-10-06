@@ -1,164 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info — Cino.</title>
-    <link rel="stylesheet" href="../../style.css">
-
-    <style>
-        #links {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .link-card {
-            background: #111318;
-            border: 1px solid #242731;
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 14px;
-            text-align: center;
-        }
-
-        .link-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .link-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .link-url {
-            flex: 1;
-            min-width: 0;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #292c35;
-            background: #08090c;
-            color: #f5f7fb;
-            font: inherit;
-            text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            .link-row {
-                flex-direction: column;
-            }
-
-            .link-url {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="wrap">
-
-    <div class="top">
-        <div>
-            <div class="brand">Cino.</div>
-            <h1 class="page-title">Info & Links</h1>
-            <p class="sub">Copy and paste these links.</p>
-        </div>
-
-        <a class="back" href="../../home/">Back</a>
-    </div>
-
-    <div id="links"></div>
-
-</div>
-
-<script>
-
-const links = [
-
-    {
-        name: "My Website",
-        url: "https://cino.pntr.dev/"
-    },
-
-    {
-        name: "GitHub",
-        url: "https://github.com/w5p926ykdh-pixel"
-    },
-
-    {
-        name: "YouTube",
-        url: "https://youtube.com/"
-    },
-
-    {
-        name: "Discord",
-        url: "https://discord.com/"
-    }
-
-    // Add more links here:
-    //
-    // {
-    //     name: "Example",
-    //     url: "https://example.com/"
-    // }
-
-];
-
-const container = document.getElementById("links");
-
-links.forEach(link => {
-
-    const card = document.createElement("div");
-
-    card.className = "link-card";
-
-    card.innerHTML = `
-        <div class="link-name">
-            ${link.name}
-        </div>
-
-        <div class="link-row">
-
-            <input
-                class="link-url"
-                value="${link.url}"
-                readonly
-            >
-
-            <button
-                class="btn"
-                onclick="copyLink('${link.url}', this)"
-            >
-                Copy
-            </button>
-
-        </div>
-    `;
-
-    container.appendChild(card);
-
-});
-
-async function copyLink(url, button) {
-
-    await navigator.clipboard.writeText(url);
-
-    const oldText = button.textContent;
-
-    button.textContent = "Copied!";
-
-    setTimeout(() => {
-        button.textContent = oldText;
-    }, 1200);
-
+:root {
+    color-scheme: dark;
+    --bg: #08090c;
+    --card: #111318;
+    --text: #f5f7fb;
+    --muted: #8d94a3;
 }
 
-</script>
+* {
+    box-sizing: border-box;
+}
 
-</body>
-</html>
+body {
+    margin: 0;
+    padding: 32px;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #171922, #08090c 45%);
+    color: var(--text);
+}
+
+.wrap {
+    max-width: 1100px;
+    margin: auto;
+}
+
+.top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.brand {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.hero {
+    text-align: center;
+    margin: 80px auto 50px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 8vw, 76px);
+    margin: 0;
+    letter-spacing: -4px;
+}
+
+.hero p,
+.sub {
+    color: var(--muted);
+}
+
+.hero p {
+    margin-top: 12px;
+    font-size: 17px;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.choice {
+    width: 100%;
+    max-width: 500px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px solid #242731;
+    background: #111318;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.choice:hover {
+    transform: translateY(-3px);
+    border-color: #3a3e4a;
+    background: #171922;
+}
+
+.icon {
+    font-size: 26px;
+}
+
+.page-title {
+    margin: 5px 0 0;
+    font-size: 42px;
+    letter-spacing: -2px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn,
+.back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    border: 1px solid #292c35;
+    border-radius: 11px;
+    background: #111318;
+    color: var(--text);
+    text-decoration: none;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn:hover,
+.back:hover {
+    background: #1
