@@ -13,18 +13,27 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg: #08090c;
+    --text: #f5f7fb;
+    --muted: #8d94a3;
+    --card: #111318;
+    --border: #292c35;
+}
+
 html,
 body {
     margin: 0;
     width: 100%;
     min-height: 100%;
-    background: #08090c;
+
+    background: var(--bg);
 }
 
 body {
     min-height: 100vh;
 
-    color: #f5f7fb;
+    color: var(--text);
 
     font-family:
         system-ui,
@@ -37,6 +46,146 @@ body {
     flex-direction: column;
 
     overflow-x: hidden;
+
+    transition:
+        background 0.45s ease,
+        color 0.45s ease;
+}
+
+
+/* =========================
+   LIGHT MODE
+========================= */
+
+body.light {
+    --bg: #f1f2f5;
+    --text: #111216;
+    --muted: #686d78;
+    --card: rgba(255, 255, 255, 0.62);
+    --border: rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================
+   LIQUID GLASS THEME SWITCH
+========================= */
+
+.theme-toggle {
+    position: fixed;
+
+    top: 24px;
+    right: 28px;
+
+    width: 76px;
+    height: 42px;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.32),
+            rgba(255,255,255,0.08)
+        );
+
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.35),
+        inset 0 -1px 2px rgba(0,0,0,0.12),
+        0 8px 30px rgba(0,0,0,0.18);
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+
+    transition:
+        transform 0.25s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.06);
+}
+
+.theme-toggle:active {
+    transform: scale(0.94);
+}
+
+.theme-icon {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-size: 19px;
+
+    background: rgba(255,255,255,0.72);
+
+    color: #111;
+
+    box-shadow:
+        0 2px 10px rgba(0,0,0,0.15),
+        inset 0 1px 2px rgba(255,255,255,0.8);
+
+    transition:
+        transform 0.4s ease,
+        background 0.35s ease,
+        color 0.35s ease;
+}
+
+
+/* DARK MODE */
+
+body:not(.light) .theme-icon {
+    transform: translateX(-15px);
+
+    background: #172b68;
+
+    color: white;
+
+    box-shadow:
+        0 0 12px rgba(80,130,255,0.45),
+        inset 0 1px 2px rgba(255,255,255,0.3);
+}
+
+
+/* LIGHT MODE */
+
+body.light .theme-toggle {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,0.75),
+            rgba(255,255,255,0.35)
+        );
+
+    border-color: rgba(255,255,255,0.75);
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.9),
+        0 8px 30px rgba(0,0,0,0.12);
+}
+
+body.light .theme-icon {
+    transform: translateX(15px);
+
+    background: white;
+
+    color: #f2a900;
 }
 
 
@@ -89,7 +238,7 @@ main {
 .hero p {
     margin: 32px 0 0;
 
-    color: #8d94a3;
+    color: var(--muted);
 
     font-size: 18px;
 }
@@ -126,15 +275,18 @@ main {
 
     gap: 25px;
 
-    background: #111318;
+    background: var(--card);
 
-    border: 1px solid #292c35;
+    border: 1px solid var(--border);
 
     border-radius: 25px;
 
-    color: #f5f7fb;
+    color: var(--text);
 
     text-decoration: none;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
     transition:
         transform 0.2s ease,
@@ -145,7 +297,7 @@ main {
 .choice:hover {
     transform: translateY(-5px);
 
-    background: #171922;
+    background: rgba(255,255,255,0.08);
 
     border-color: #3a3e4a;
 }
@@ -215,7 +367,7 @@ footer {
 
 
 /* =========================
-   LOGO IMAGE
+   LOGO
 ========================= */
 
 .cino-logo {
@@ -281,6 +433,21 @@ footer {
         padding-bottom: 90px;
     }
 
+    .theme-toggle {
+        top: 16px;
+        right: 16px;
+
+        width: 68px;
+        height: 38px;
+    }
+
+    .theme-icon {
+        width: 29px;
+        height: 29px;
+
+        font-size: 17px;
+    }
+
     .hero h1 {
         font-size: 58px;
 
@@ -340,6 +507,27 @@ footer {
 
 <body>
 
+
+<!-- =========================
+     THEME SWITCH
+========================= -->
+
+<button
+    id="themeToggle"
+    class="theme-toggle"
+    aria-label="Toggle light and dark mode"
+>
+    <span
+        class="theme-icon"
+        id="themeIcon"
+    >☾</span>
+</button>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
 <main>
 
     <section class="hero">
@@ -361,15 +549,20 @@ footer {
 
     <section class="choices">
 
+
         <a
             class="choice"
             href="../gallery/info-copyandpaste/"
         >
-            <span class="icon">🔗</span>
+
+            <span class="icon">
+                🔗
+            </span>
 
             <span class="choice-name">
                 Info &amp; Links
             </span>
+
         </a>
 
 
@@ -377,11 +570,15 @@ footer {
             class="choice"
             href="../gallery/photos/"
         >
-            <span class="icon">▧</span>
+
+            <span class="icon">
+                ▧
+            </span>
 
             <span class="choice-name">
                 Photos
             </span>
+
         </a>
 
 
@@ -389,17 +586,26 @@ footer {
             class="choice"
             href="../gallery/videos/"
         >
-            <span class="icon">▶</span>
+
+            <span class="icon">
+                ▶
+            </span>
 
             <span class="choice-name">
                 Videos
             </span>
+
         </a>
+
 
     </section>
 
 </main>
 
+
+<!-- =========================
+     FOOTER
+========================= -->
 
 <footer>
 
@@ -414,6 +620,62 @@ footer {
     >
 
 </footer>
+
+
+<!-- =========================
+     THEME JAVASCRIPT
+========================= -->
+
+<script>
+
+const toggle =
+    document.getElementById("themeToggle");
+
+const icon =
+    document.getElementById("themeIcon");
+
+
+/* Load saved theme */
+
+const savedTheme =
+    localStorage.getItem("cinoTheme");
+
+
+if (savedTheme === "light") {
+
+    document.body.classList.add("light");
+
+    icon.textContent = "☀";
+
+} else {
+
+    icon.textContent = "☾";
+
+}
+
+
+/* Toggle theme */
+
+toggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("light");
+
+    const isLight =
+        document.body.classList.contains("light");
+
+
+    localStorage.setItem(
+        "cinoTheme",
+        isLight ? "light" : "dark"
+    );
+
+
+    icon.textContent =
+        isLight ? "☀" : "☾";
+
+});
+
+</script>
 
 
 </body>
