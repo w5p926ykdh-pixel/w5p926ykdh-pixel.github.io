@@ -352,7 +352,7 @@ main {
 
 
 /* =========================
-   FOOTER / GLASS BAR
+   FOOTER
 ========================= */
 
 footer {
@@ -373,13 +373,12 @@ footer {
 
     padding: 0 28px;
 
-    /* Soft gray glass */
+    /* LIGHT MODE DEFAULT */
 
-    background:
-        rgba(125, 128, 135, 0.72);
+    background: rgba(155, 158, 165, 0.68);
 
     border-top:
-        1px solid rgba(255, 255, 255, 0.28);
+        1px solid rgba(255, 255, 255, 0.45);
 
     backdrop-filter:
         blur(20px) saturate(140%);
@@ -389,7 +388,7 @@ footer {
 
     box-shadow:
         0 -8px 30px rgba(0, 0, 0, 0.08),
-        inset 0 1px 1px rgba(255, 255, 255, 0.18);
+        inset 0 1px 1px rgba(255, 255, 255, 0.3);
 
     z-index: 100;
 
@@ -401,12 +400,29 @@ footer {
 
 
 /* =========================
+   DARK MODE FOOTER
+========================= */
+
+body:not(.light) footer {
+
+    background: #000;
+
+    border-top: none;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================
    EMAIL
 ========================= */
 
 .email {
 
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(20, 21, 24, 0.65);
 
     font-family:
         Georgia,
@@ -419,6 +435,14 @@ footer {
 
     transition:
         color 0.45s ease;
+}
+
+
+/* DARK MODE EMAIL */
+
+body:not(.light) .email {
+
+    color: #252525;
 }
 
 
@@ -437,31 +461,6 @@ footer {
     user-select: none;
 
     display: block;
-}
-
-
-/* =========================
-   LIGHT MODE FOOTER
-========================= */
-
-body.light footer {
-
-    background:
-        rgba(155, 158, 165, 0.68);
-
-    border-top-color:
-        rgba(255, 255, 255, 0.45);
-
-    box-shadow:
-        0 -8px 30px rgba(0, 0, 0, 0.08),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3);
-}
-
-
-body.light .email {
-
-    color:
-        rgba(20, 21, 24, 0.65);
 }
 
 
@@ -631,7 +630,7 @@ body.light .email {
 
 
 <!-- =========================
-     LIGHT / DARK SWITCH
+     THEME SWITCH
 ========================= -->
 
 <button
@@ -677,7 +676,7 @@ body.light .email {
 
 
     <!-- =========================
-         THREE CARDS
+         CARDS
     ========================= -->
 
     <section class="choices">
@@ -760,7 +759,7 @@ body.light .email {
 
 
 <!-- =========================
-     LIGHT / DARK JAVASCRIPT
+     JAVASCRIPT
 ========================= -->
 
 <script>
@@ -774,9 +773,7 @@ const icon =
     document.getElementById("themeIcon");
 
 
-/* =========================
-   LOAD SAVED THEME
-========================= */
+/* Load saved theme */
 
 const savedTheme =
     localStorage.getItem("cinoTheme");
@@ -795,15 +792,11 @@ if (savedTheme === "light") {
 }
 
 
-/* =========================
-   TOGGLE THEME
-========================= */
+/* Toggle theme */
 
 toggle.addEventListener("click", () => {
 
-
     document.body.classList.toggle("light");
-
 
     const isLight =
         document.body.classList.contains("light");
@@ -817,7 +810,6 @@ toggle.addEventListener("click", () => {
 
     icon.textContent =
         isLight ? "☀" : "☾";
-
 
 });
 
