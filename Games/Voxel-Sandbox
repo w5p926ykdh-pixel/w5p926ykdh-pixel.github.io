@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Voxel Sandbox</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#86c9f3;font-family:system-ui,-apple-system,sans-serif;touch-action:none}canvas{display:block;width:100%;height:100%;image-rendering:pixelated}#hud{position:fixed;inset:0;pointer-events:none;color:white;text-shadow:0 2px 3px #222;font-weight:700}.top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.panel{background:#17212bd9;border:1px solid #ffffff45;border-radius:10px;padding:9px 11px;font-size:13px;max-width:min(75vw,360px)}button{pointer-events:auto;border:1px solid #ffffff66;border-radius:9px;background:#253442e8;color:#fff;font:600 13px system-ui;padding:10px 12px;touch-action:manipulation}.crosshair{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:25px;font-weight:400}.bottom{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;align-items:end;gap:10px;padding:0 10px}.hotbar{display:flex;gap:5px;pointer-events:auto;background:#17212bd9;padding:6px;border-radius:10px}.slot{width:42px;height:42px;padding:0;border:2px solid #ffffff45;display:grid;place-items:center;font-size:20px}.slot.active{border-color:#fff;box-shadow:0 0 0 2px #222}.controls{position:absolute;bottom:92px;left:12px;right:12px;display:none;justify-content:space-between;align-items:end;pointer-events:none}.pad{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,42px);gap:4px;pointer-events:auto}.pad button,.actions button{width:42px;height:42px;padding:0;font-size:18px;opacity:.9}.actions{display:flex;gap:6px;pointer-events:auto;flex-wrap:wrap;justify-content:end;max-width:150px}.actions button{width:58px;font-size:11px}.hint{position:absolute;left:50%;top:58%;transform:translateX(-50%);background:#17212bbf;padding:6px 9px;border-radius:7px;font-size:12px;white-space:nowrap}.desktop{display:none;position:absolute;left:12px;bottom:12px}.bottom{bottom:12px}body.mobile .controls{display:flex}body.mobile .desktop{display:none}body.pc .controls{display:none}body.pc .desktop{display:block}body.pc .panel{font-size:14px}
+</style>
+</head>
+<body>
+<canvas id="game" aria-label="Voxel sandbox game"></canvas>
+<div id="hud">
+ <div class="top"><div class="panel" id="status">Voxel Sandbox · generating world…</div><button id="reset">New world</button></div>
+ <div class="crosshair">+</div>
+ <div class="hint" id="hint">Tap a block to break it · tap nearby ground to place</div>
+ <div class="controls">
+  <div class="pad">
+   <span></span><button data-move="forward">▲</button><span></span>
+   <button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button>
+  </div>
+  <div class="actions"><button id="jump">JUMP</button><button id="break">BREAK</button><button id="place">PLACE</button></div>
+ </div>
+ <div class="desktop panel">PC controls: WASD or ZQSD · arrows also move · Space jump · click a block to break · right-click to place · drag to look · 1–5 select block</div>
+ <div class="bottom"><div class="hotbar" id="hotbar"></div></div>
+</div>
+<script>
+(() => {
+const canvas=document.querySelector('#game'),ctx=canvas.getContext('2d');
+const status=document.querySelector('#status'),hint=document.querySelector('#hint');
+// Prefer touch controls on touch-first devices (including iPads); keyboard/mouse on PCs.
+const isTouchDevice = ('ontouchstart' in window) ||
+  (navigator.maxTouchPoints > 0) ||
+  (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+document.body.classList.add(isTouchDevice ? 'mobile' : 'pc');
+const W=28,D=28,H=12, TILE=24, TH=12;
+const types=[
+ {id:1,name:'Grass',color:'#6cae45',top:'#8acb58',side:'#56863b',icon:'🟩'},
+ {id:2,name:'Dirt',color:'#98643b',top:'#b37a4a',side:'#80502f',icon:'🟫'},
+ {id:3,name:'Stone',color:'#92999c',top:'#b5bbbe',side:'#73797c',icon:'⬜'},
+ {id:4,name:'Wood',color:'#98602f',top:'#bd8a51',side:'#75451f',icon:'🟤'},
+ {id:5,name:'Leaves',color:'#338448',top:'#50a858',side:'#26703b',icon:'🌳'}
+];
+let world=[],heights=[],seed=1,selected=1,player={x:W/2,z:D/2,y:8,vy:0,dir:0,pitch:0},keys={},move={},drag=null,lastTap=0;
+function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+function terrain(x,z){return Math.max(2,Math.min(7,Math.floor(3.7+Math.sin(x*.42)*1.25+Math.cos(z*.35)*1.2+Math.sin((x+z)*.24)*.8)))}
+function generate(){seed=(Date.now() ^ Math.floor(Math.random()*1e9))>>>0;world=[];heights=[];
+ for(let x=0;x<W;x++){world[x]=[];heights[x]=[];for(let z=0;z<D;z++){let h=terrain(x,z);heights[x][z]=h;world[x][z]=[];for(let y=0;y<h;y++){let id=y===h-1?1:y>=h-3?2:3;world[x][z][y]=id}
+ if(rand()<.045&&x>2&&z>2&&x<W-3&&z<D-3){let base=h;for(let y=0;y<3;y++)world[x][z][base+y]=4;for(let dx=-2;dx<=2;dx++)for(let dz=-2;dz<=2;dz++)for(let dy=2;dy<=4;dy++){if(Math.abs(dx)+Math.abs(dz)+(dy===4?1:0)<5&&base+dy<H)world[Math.max(0,x+dx)][Math.max(0,z+dz)][base+dy]=5;}}}}
+ player={x:W/2,z:D/2,y:heights[Math.floor(W/2)][Math.floor(D/2)]+1,vy:0,dir:0,pitch:0};render();updateStatus();}
+function get(x,y,z){if(x<0||x>=W||z<0||z>=D||y<0||y>=H)return 0;return world[x][z][y]||0}
+function set(x,y,z,id){if(x<0||x>=W||z<0||z>=D||y<0||y>=H)return false;world[x][z][y]=id||0;return true}
+function resize(){let dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.floor(innerWidth*dpr);canvas.height=Math.floor(innerHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);render()}
+function project(x,y,z){let dx=x-player.x,dz=z-player.z,co=Math.cos(player.dir),si=Math.sin(player.dir);let rx=dx*co-dz*si,rz=dx*si+dz*co;let scale=Math.min(innerWidth/(W*1.15),innerHeight/(D*.8+H*.5));scale=Math.max(7,Math.min(24,scale));return {x:innerWidth/2+rx*scale*.92+rz*scale*.42,y:innerHeight*.53+(rx*scale*.42-rz*scale*.92)-(y-player.y)*scale*.82,s:scale}}
+function poly(points,color,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.stroke()}}
+function block(x,y,z,id){let p=project(x,y,z),s=p.s,hh=s*.82,th=s*.42;let top=[{x:p.x,y:p.y-hh},{x:p.x+s*.92,y:p.y-hh+th},{x:p.x,y:p.y-hh+th*2},{x:p.x-s*.92,y:p.y-hh+th}];let left=[top[3],top[2],{x:top[2].x,y:top[2].y+hh},{x:top[3].x,y:top[3].y+hh}];let right=[top[2],top[1],{x:top[1].x,y:top[1].y+hh},{x:top[2].x,y:top[2].y+hh}];let t=types.find(a=>a.id===id)||types[0];poly(left,t.side,'#24352a55');poly(right,shade(t.side,-16),'#24352a55');poly(top,t.top,'#24352a55');return {x:p.x,y:p.y,s}}
+function shade(hex,amt){let n=parseInt(hex.slice(1),16),r=Math.max(0,Math.min(255,(n>>16)+amt)),g=Math.max(0,Math.min(255,((n>>8)&255)+amt)),b=Math.max(0,Math.min(255,(n&255)+amt));return '#'+(1<<24|r<<16|g<<8|b).toString(16).slice(1)}
+function render(){if(!ctx||!canvas.width)return;let w=innerWidth,h=innerHeight;ctx.clearRect(0,0,w,h);let sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#78c7f4');sky.addColorStop(.64,'#c5e8f7');sky.addColorStop(.65,'#b1d08b');sky.addColorStop(1,'#739b51');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+ // draw topmost visible blocks, back to front
+ let blocks=[];for(let x=0;x<W;x++)for(let z=0;z<D;z++)for(let y=0;y<world[x][z].length;y++){let id=get(x,y,z);if(!id)continue;if(get(x,y+1,z)&&get(x+1,y,z)&&get(x,y,z+1))continue;let p=project(x,y,z);blocks.push({x,y,z,id,depth:p.y+p.s*.5})}
+ blocks.sort((a,b)=>a.depth-b.depth);for(let b of blocks)block(b.x,b.y,b.z,b.id);
+ // player marker
+ let pp=project(player.x,player.y,player.z);ctx.fillStyle='#26384b';ctx.fillRect(pp.x-5,pp.y-18,10,18);ctx.fillStyle='#f0c7a2';ctx.fillRect(pp.x-5,pp.y-27,10,9);ctx.fillStyle='#315b9a';ctx.fillRect(pp.x-6,pp.y-10,12,10);
+ updateStatus();}
+function updateStatus(){status.textContent=`Voxel Sandbox · ${types[selected-1].name} selected · position ${Math.floor(player.x)}, ${Math.floor(player.y)}, ${Math.floor(player.z)}`;}
+function drawHotbar(){let bar=document.querySelector('#hotbar');bar.innerHTML='';types.slice(0,5).forEach(t=>{let b=document.createElement('button');b.className='slot'+(selected===t.id?' active':'');b.textContent=t.icon;b.title=t.name;b.onclick=()=>{selected=t.id;drawHotbar();updateStatus()};bar.appendChild(b)})}
+function nearestBlock(px,py){let best=null,bd=Infinity;for(let x=0;x<W;x++)for(let z=0;z<D;z++)for(let y=0;y<world[x][z].length;y++){let id=get(x,y,z);if(!id)continue;let p=project(x,y,z),dx=px-p.x,dy=py-(p.y-p.s*.2),d=dx*dx+dy*dy;if(d<(p.s*1.3)**2&&d<bd){best={x,y,z,id,p};bd=d}}return best}
+function breakBlock(){let b=nearestBlock(innerWidth/2,innerHeight/2);if(!b){b=nearestBlock(innerWidth/2,innerHeight*.53)}if(b){set(b.x,b.y,b.z,0);render()}}
+function placeBlock(){let b=nearestBlock(innerWidth/2,innerHeight/2)||nearestBlock(innerWidth/2,innerHeight*.53);if(!b)return;let candidates=[[b.x,b.y+1,b.z],[b.x+1,b.y,b.z],[b.x-1,b.y,b.z],[b.x,b.y,b.z+1],[b.x,b.y,b.z-1]];for(let [x,y,z] of candidates){if(!get(x,y,z)&&!(Math.floor(player.x)===x&&Math.floor(player.z)===z&&Math.abs(player.y-y)<2)){set(x,y,z,selected);render();return}}}
+function movePlayer(dt){let f=(keys.w||keys.z||keys.ArrowUp||move.forward?1:0)-(keys.s||keys.ArrowDown||move.back?1:0),side=(keys.d||keys.ArrowRight||move.right?1:0)-(keys.a||keys.q||keys.ArrowLeft||move.left?1:0);let speed=dt*4.5,fx=Math.sin(player.dir),fz=-Math.cos(player.dir);player.x+=((fx*f)+(Math.cos(player.dir)*side))*speed;player.z+=((fz*f)+(-Math.sin(player.dir)*side))*speed;player.x=Math.max(.5,Math.min(W-.5,player.x));player.z=Math.max(.5,Math.min(D-.5,player.z));let ground=heights[Math.floor(player.x)][Math.floor(player.z)]+1;if(player.y>ground){player.vy-=dt*13;player.y+=player.vy*dt;if(player.y<ground){player.y=ground;player.vy=0}}else{player.y=ground;player.vy=0}render()}
+let last=performance.now();function loop(now){let dt=Math.min(.04,(now-last)/1000);last=now;if(Object.values(keys).some(Boolean)||Object.values(move).some(Boolean))movePlayer(dt);requestAnimationFrame(loop)}
+function jump(){let ground=heights[Math.floor(player.x)][Math.floor(player.z)]+1;if(player.y<=ground+.05)player.vy=6}
+document.querySelectorAll('[data-move]').forEach(b=>{let k=b.dataset.move;b.addEventListener('pointerdown',e=>{e.preventDefault();move[k]=true;b.setPointerCapture(e.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>move[k]=false))});
+document.querySelector('#jump').onclick=jump;document.querySelector('#break').onclick=breakBlock;document.querySelector('#place').onclick=placeBlock;
+document.querySelector('#reset').onclick=generate;
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();jump()}if(e.key.toLowerCase()==='f')breakBlock();if(e.key.toLowerCase()==='e')placeBlock();if('12345'.includes(e.key)){selected=Number(e.key);drawHotbar();updateStatus()}});
+window.addEventListener('keyup',e=>keys[e.key]=false);
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+canvas.addEventListener('pointerdown',e=>{if(e.target!==canvas)return;drag={x:e.clientX,y:e.clientY,moved:false,id:e.pointerId};canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;if(drag.moved){player.dir+=dx*.009;player.pitch=Math.max(-1,Math.min(1,player.pitch+dy*.003));drag.x=e.clientX;drag.y=e.clientY;render()}});
+canvas.addEventListener('pointerup',e=>{if(!drag)return;if(!drag.moved){if(e.button===2)placeBlock();else{let b=nearestBlock(e.clientX,e.clientY);if(b){set(b.x,b.y,b.z,0);render()}else placeBlock()}}drag=null});
+window.addEventListener('resize',resize);
+drawHotbar();resize();generate();requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
